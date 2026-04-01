@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import user from "../models/User.js"
+import User from "../models/User.js"
 
 const authMiddleware = async (req , res ,next)=>{
     const token = req.header('Authorization');
@@ -10,7 +10,8 @@ const authMiddleware = async (req , res ,next)=>{
 
         try{
             const decoded = jwt.verify(token,process.env.JWT_SECRET)
-            req.user= await user.findById(decoded.userId)
+            //  const user = req.user
+            req.user= await User.findById(decoded.userId)
             next();
         }catch{
             res.status(401).json({message:'Invalid token'})
