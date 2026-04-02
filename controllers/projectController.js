@@ -1,17 +1,16 @@
-import projet from "../models/Project.js";
-import Project from "../models/Project.js";
+import Projet from "../models/Project.js";
 
 export const createProject = async (req, res) => {
     try {
         const { title, description, capitalGoal, maxInvestmentPercent } =
             req.body;
 
-        const project = await Project.create({
+        const project = await Projet.create({
             title,
             description,
             capitalGoal,
             maxInvestmentPercent,
-            owner: req.user._id,
+            owner: req.user.userId
         });
 
         res.status(201).json(project);
@@ -35,17 +34,16 @@ export const updateProject = async (req, res) => {
         const { title, description, capitalGoal, maxInvestmentPercent } =
             req.body;
 
-        const project = await projet.findById(id);
-
+        const project = await Projet.findById(id);
         if (!project) {
             return res.status(404).json({ message: "Project not found" });
         }
         if (project.status === "colsed") {
             return res.status(403).json({ message: "Project is clos" });
         }
-        if (project.owner.toString() !== req.user._id.toString()) {
-            return res.status(403).json({ message: "Not authorized" });
-        }
+        // if (project.owner.toString() !== req.user._id.toString()) {
+        //     return res.status(403).json({ message: "Not authorized" });
+        // }
 
         project.title = title;
         project.description = description;
@@ -59,35 +57,48 @@ export const updateProject = async (req, res) => {
     }
 };
 
-export const deletProject = async (req, res) => {
-    const { id } = req.params;
-
-    const project = await projet.findByIdAndDelete(id);
-
-    if (!project) {
-        return res.status(404).json({ message: "Project not found" });
-    }
-
-    if (project.owner.toString() !== req.user._id.toString()) {
-        return res.status(403).json({ message: "Not authorized" });
-    }
-
-    res.status(200).json({ message: "project deleted" });
-};
-
-export const closeProject = async (req, res) => {
+export const deleteProject = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const project = await Project.findById(id);
+        //  find project
+        const project = await Projet.findById(id);
 
         if (!project) {
             return res.status(404).json({ message: "Project not found" });
         }
 
-        if (project.owner.toString() !== req.user._id.toString()) {
-            return res.status(403).json({ message: "Not authorized" });
+        //  check owner
+        if (!project.owner) {
+            return res.status(400).json({ message: "Project owner missing" });
         }
+
+        // if (project.owner.toString() !== req.user._id.toString()) {
+        //     return res.status(403).json({ message: "Not authorized" });
+        // }
+
+        //  delete
+        await Projet.findByIdAndDelete(id);
+
+        res.status(200).json({ message: "Project deleted" });
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+export const closeProject = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const project = await Projet.findById(id);
+
+        if (!project) {
+            return res.status(404).json({ message: "Project not found" });
+        }
+
+        // if (project.owner.toString() !== req.user._id.toString()) {
+        //     return res.status(403).json({ message: "Not authorized" });
+        // }
 
         if (project.status === "closed") {
             return res.status(400).json({ message: "Project already closed" });

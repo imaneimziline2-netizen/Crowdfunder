@@ -7,6 +7,7 @@ import {
     getMyProjects,
     updateProject,
     closeProject,
+    deleteProject
 } from "../controllers/projectController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { roleMiddleware } from "../middlewares/roleMiddleware.js";
@@ -30,6 +31,12 @@ router.put(
   authMiddleware,
   roleMiddleware('project_owner'),
   closeProject
+);
+router.delete(
+  '/:id/delete',
+  authMiddleware,
+  roleMiddleware('project_owner'),
+  deleteProject
 );
 
 export default router;
