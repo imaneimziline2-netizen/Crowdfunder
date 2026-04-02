@@ -1,4 +1,3 @@
-// PUT    /projects/:id    → update
 // DELETE /projects/:id    → delete
 // GET    /projects/:id/investors
 
@@ -7,6 +6,7 @@ import {
     createProject,
     getMyProjects,
     updateProject,
+    closeProject,
 } from "../controllers/projectController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { roleMiddleware } from "../middlewares/roleMiddleware.js";
@@ -24,6 +24,12 @@ router.put(
     authMiddleware,
     roleMiddleware("project_owner"),
     updateProject,
+);
+router.put(
+  '/:id/close',
+  authMiddleware,
+  roleMiddleware('project_owner'),
+  closeProject
 );
 
 export default router;

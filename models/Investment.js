@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const investmentSchema = new mongoose.Schema({
     amount: Number,
+    percantage : Number,
     investor: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User' 
