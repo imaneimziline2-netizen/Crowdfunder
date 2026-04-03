@@ -1,3 +1,4 @@
+import investment from "../models/Investment.js";
 import Projet from "../models/Project.js";
 
 export const createProject = async (req, res) => {
@@ -21,13 +22,53 @@ export const createProject = async (req, res) => {
 
 export const getMyProjects = async (req, res) => {
     try {
-        const projects = await Project.find({ owner: req.user._id });
-        res.json(projects);
+        const projects = await Projet.find({ owner: req.user._id });
+
+        const projectIds = projects.map(p => p._id);
+
+        const allInvestments = await investment.find({
+            project: { $in: projectIds }
+        }).populate('investor', 'name email balance');
+
+        const investmentsByProject = {};
+
+        allInvestments.forEach(inv => {
+            const projectId = inv.project.toString();
+            if (!investmentsByProject[projectId]) {
+                investmentsByProject[projectId] = [];
+            }
+            investmentsByProject[projectId].push(inv);
+        });
+
+        const projectsWithInvestors = projects.map(project => {
+            const projectId = project._id.toString();
+            const investments = investmentsByProject[projectId] || [];
+
+            return {
+                title: project.title,
+                capitalGoal: project.capitalGoal,
+                capitalRaised: project.capitalRaised,
+                status: project.status,
+
+                investors: investments.map(inv => {
+                    const percentage = (inv.amount / project.capitalGoal) * 100;
+
+                    return {
+                        name: inv.investor.name,
+                        email: inv.investor.email,
+                        amount: inv.amount,
+                        percentage: percentage.toFixed(2) + '%'
+                    };
+                })
+            };
+        });
+
+        res.json(projectsWithInvestors);
+
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 };
-
 export const updateProject = async (req, res) => {
     try {
         const { id } = req.params;

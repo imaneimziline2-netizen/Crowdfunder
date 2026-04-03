@@ -50,7 +50,7 @@ export const invest = async (req, res) => {
 export const getMyInvestments = async (req, res) => {
     try {
         const investments = await Investment.find({ investor: req.user._id })
-// .populate('project', 'title capitalGoal capitalRaised');
+
         res.json(investments);
 
     } catch (err) {
