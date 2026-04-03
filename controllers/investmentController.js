@@ -13,9 +13,9 @@ export const invest = async (req, res) => {
         }
 
         //  exceed capital
-        const remaining = project.capitalGoal - project.capitalRaised;
-        if (amount > remaining) {
-            return res.status(400).json({ message: 'Amount exceeds remaining capital' });
+        const capitalLeft = project.capitalGoal - project.capitalRaised;
+        if (amount > capitalLeft) {
+            return res.status(400).json({ message: 'Amount exceeds capitalLeft capital' });
         }
 
         //  exceed 50%

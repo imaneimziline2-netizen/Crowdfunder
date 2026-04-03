@@ -8,8 +8,13 @@ const projectSchema = new mongoose.Schema({
     description:{
         type:String
     },
-    capital:{
-        type:Number
+    capitalGoal: {
+        type: Number,
+        required: true
+    },
+    capitalRaised: {
+        type: Number,
+        default: 0
     },
     status: { 
         type: String, enum: ['open', 'closed'],
@@ -17,7 +22,7 @@ const projectSchema = new mongoose.Schema({
     },
     maxInvestmentPercent: {
         type: Number,
-        default: 50 
+        default: 50  
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
