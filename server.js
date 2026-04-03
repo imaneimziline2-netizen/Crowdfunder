@@ -4,6 +4,7 @@ import dotenv from'dotenv';
 import authRoutes from'./routes/authRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
 import investmentRoutes from './routes/investmentRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 
 dotenv.config();
@@ -13,6 +14,7 @@ const app = express();
 app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/api/investments', investmentRoutes);
+app.use('/api/admin', adminRoutes);
 
 
 app.use('/api/projects', projectRoutes);

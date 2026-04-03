@@ -1,5 +1,6 @@
 import Project from '../models/Project.js';
 import Investment from '../models/Investment.js';
+import projet from '../models/Project.js';
 
 export const invest = async (req, res) => {
     try {
@@ -26,7 +27,7 @@ export const invest = async (req, res) => {
         //  create investment
         await Investment.create({
             amount,
-            investor: req.user._id,
+            investor: req.user.userId ,
             project: projectId
         });
 
@@ -49,7 +50,7 @@ export const invest = async (req, res) => {
 
 export const getMyInvestments = async (req, res) => {
     try {
-        const investments = await Investment.find({ investor: req.user._id })
+        const investments = await Investment.find({ investor: req.user.userId })
 
         res.json(investments);
 

@@ -19,7 +19,11 @@ router.post(
     roleMiddleware("project_owner"),
     createProject,
 );
-router.get("/my", authMiddleware,roleMiddleware("project_owner"),getMyProjects);
+router.get(
+  '/my',
+  authMiddleware, 
+  getMyProjects
+);
 router.put(
     "/:id",
     authMiddleware,

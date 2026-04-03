@@ -22,8 +22,9 @@ export const createProject = async (req, res) => {
 
 export const getMyProjects = async (req, res) => {
     try {
-        const projects = await Projet.find({ owner: req.user._id });
-
+    
+        const projects = await Projet.find({ owner: req.user.userId  });
+ 
         const projectIds = projects.map(p => p._id);
 
         const allInvestments = await investment.find({
