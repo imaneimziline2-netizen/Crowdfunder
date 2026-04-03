@@ -46,3 +46,14 @@ export const invest = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
+export const getMyInvestments = async (req, res) => {
+    try {
+        const investments = await Investment.find({ investor: req.user._id })
+// .populate('project', 'title capitalGoal capitalRaised');
+        res.json(investments);
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};

@@ -9,7 +9,7 @@ const investmentSchema = new mongoose.Schema({
     },
     project: { 
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Project' 
+        ref: 'project' 
     },
 }, { timestamps: true });
 
